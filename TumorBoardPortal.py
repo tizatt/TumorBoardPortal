@@ -22,16 +22,15 @@ def getCancerCensus():
 
 
 def printBiomarker( patient, variants ):
-    biomarkers = {"source" : "TGen",
+    biomarkers = {"biomarkers" : variants,
+                  "source" : "TGen",
                   "drug_rules_version": "1.3",
-                  "order": {"tumor_collection_date":"01/01/2000", "primary_diagnosis": "", "specimen_type" : "", "specimen_sit": ""},
-                  "biomarkers" : variants}
+                  "order": {"tumor_collection_date":"01/01/2000", "primary_diagnosis": "", "specimen_type" : "", "specimen_site": ""}
+                  }
     file = open(patient + ".json", "w")
     pp = pprint.PrettyPrinter(indent=4)
-    with open( patient + ".json", "w") as jout:
-        jout.write(pprint.pformat(vars(pprint)))
-    pp.pprint( biomarkers)
-
+    pprint.pprint(biomarkers, file)
+    #pprint.pprint(biomarkers, file)
 def getVariants():
     ccGenes = getCancerCensus()
     studyResult = tumorCollection.find({"variants.study" : study, 'variants.filter' : 'PASS', "gene" : { "$in": ccGenes},
@@ -61,9 +60,13 @@ def parseVariants(studyResult):
         variant = { "gene": gene, "alteration_type": alteration_type, "origin": origin, "effect" : effect}
         variants.append( variant )
 
+        if patient == "":
+            currentPatient = patient
+
         if patient != currentPatient:
             currentPatient = patient
             printBiomarker( patient, variants )
+            variants = []
             #print( patient + " " + gene + " " + alteration_type + " " + origin + " " + effect + " " + tissue)
 
 
