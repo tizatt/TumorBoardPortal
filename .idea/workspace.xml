@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5d3335e-8a02-443d-8a7a-7fdd14428398" name="Default Changelist" comment="Added sorting by studyPatient">
-      <change beforePath="$PROJECT_DIR$/.idea/TumorBoardPortal.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TumorBoardPortal.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="b5d3335e-8a02-443d-8a7a-7fdd14428398" name="Default Changelist" comment="Added print to different patient files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TumorBoardPortal.py" beforeDir="false" afterPath="$PROJECT_DIR$/TumorBoardPortal.py" afterDir="false" />
     </list>
@@ -82,7 +80,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566577891762</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added print to different patient files">
+      <created>1566597070230</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1566597070230</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -100,6 +105,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added sorting by studyPatient" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added sorting by studyPatient" />
+    <MESSAGE value="Added print to different patient files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added print to different patient files" />
   </component>
 </project>
