@@ -16,22 +16,21 @@ study = "C024"
 origin = "DNA"
 
 
-def getPatientId(studyPatientTissue):
-    project_run_search = studyPatientTissue[:-3]
-    patient_result = componentsCollection.find({'projectRun': {'$regex': project_run_search}},
-                                               {'kb.patients.studyPatientID': 1})
-    id = ""
-    for result in patient_result:
-        result_id = result['kb']['patients']['studyPatientID']
-        print(result_id)
-        if result_id:
-            id = result_id
+def get_patient_id(study_patient_tissue):
+    convert_plan_c024 = []
+    with open('PLAN_C024.txt') as f:
+        convert_plan_c024 = dict(x.rstrip().split(None, 1) for x in f)
 
-    return id
+    patient = study_patient_tissue[:-3]
+    if patient in convert_plan_c024:
+        return convert_plan_c024[patient]
+    else:
+        return study_patient_tissue
 
 
-def getCancerCensus():
-    cancer_census_genes = geneCollection.find({'cancerCensus': {"$exists": "true"}, 'cancerCensus.Tier':'1'}, {"gene": 1})
+def get_cancer_census():
+    cancer_census_genes = geneCollection.find({'cancerCensus': {"$exists": "true"}, 'cancerCensus.Tier': '1'},
+                                              {"gene": 1})
     cc_genes = []
     for ccGene in cancer_census_genes:
         cc_genes.append(ccGene['gene'])
@@ -46,11 +45,11 @@ def print_biomarker(patient, variants):
         "biomarkers": variants
     }
     biomarkers_json = json.dumps(biomarkers)
-
-    file = open("patients/" + patient + ".json", "w")
+    patient_id = get_patient_id(patient)
+    file = open("patients/" + patient_id + ".json", "w")
     length = len(variants)
     print("")
-    print(str(length) + " " + patient)
+    print(str(length) + " " + patient_id)
     print("")
     for row in variants:
         print(row['gene'] + " " + row['effect'] + " " + row['alteration_type'])
@@ -59,15 +58,19 @@ def print_biomarker(patient, variants):
 
 
 def getVariants():
-    ccGenes = getCancerCensus()
-    #{'variants.filename': {'$regex':'snpeff.final.vcf'}}
-    #{'variants.filename': {'$regex':'rna.final.seurat.vcf'}}
-    #{'variants.filename': {'$regex': 'Freebayes.filt.snpEff.vcf'}}
+    ccGenes = get_cancer_census()
+    # {'variants.filename': {'$regex':'snpeff.final.vcf'}}
+    # {'variants.filename': {'$regex':'rna.final.seurat.vcf'}}
+    # {'variants.filename': {'$regex': 'Freebayes.filt.snpEff.vcf'}}
     studyResult = tumorCollection.find({"variants.study": study, 'variants.filter': 'PASS', "gene": {"$in": ccGenes},
-                                        '$and':[{'aberration.aberration_type2': {"$ne": "Synonymous"}},
-                                                {'aberration.aberration_type2': {"$ne": "Intron Variant"}},
-                                                {'aberration.aberration_type2': {"$ne": "UTR"}}],
-                                        '$or': [ {'variants.filename': {'$regex':'snpeff.final.vcf'}}]
+                                        '$and': [{'aberration.aberration_type2': {"$ne": "Synonymous"}},
+                                                 {'aberration.aberration_type2': {"$ne": "Intron Variant"}},
+                                                 {'aberration.aberration_type2': {"$ne": "UTR"}}],
+                                        '$or': [{'variants.filename': {'$regex': 'snpeff.final.vcf'}},
+                                                {'variants.filename': {'$regex': 'Freebayes.filt.snpEff.vcf'}},
+                                                {'variants.filename': {'$regex': 'rna.final.seurat.vcf'}},
+                                                {'variants.filename': {'$regex': 'cna.seg.vcf'}}
+                                                ]
                                         }
                                        ).sort([("variants.studyPatientTissue", pymongo.ASCENDING)])
     return studyResult
@@ -85,6 +88,7 @@ def parseVariants(studyResult):
         origin = "DNA"
         studyPatientTissue = result['variants'][0]['studyPatientTissue']
 
+        effect = ""
         if not current_patient:
             print("changing current patient to : " + studyPatientTissue)
             current_patient = studyPatientTissue
@@ -94,16 +98,21 @@ def parseVariants(studyResult):
         else:
             effect = result['aberration']['aberration_value']
 
+        if alteration_type.startswith("Focal Copy Number Gain"):
+            effect = "Amplification"
+        elif alteration_type.startswith("Focal Copy Number Loss"):
+            effect = "Deletion"
+        elif alteration_type.startswith("High Or Moderate Variant"):
+            alteration_type = "Missense"
+        elif alteration_type.startswith("Splic"):
+            effect = alteration_type
+
         if studyPatientTissue != current_patient:
             # id = getPatientId(studyPatientTissue)
             print_biomarker(current_patient, variants)
             variants = []
             current_patient = studyPatientTissue
-            # print( patient + " " + gene + " " + alteration_type + " " + origin + " " + effect + " " + tissue)
-            if alteration_type.startswith("Focal Copy Number Gain"):
-                effect = "Amplification"
-            elif alteration_type.startswith("Focal Copy Number Loss"):
-                effect = "Deletion"
+
 
         variant = {"gene": gene, "alteration_type": alteration_type, "origin": origin, "effect": effect}
         variants.append(variant)
