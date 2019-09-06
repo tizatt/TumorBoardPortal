@@ -76,22 +76,28 @@ def getVariants():
     return studyResult
 
 
-def parseVariants(studyResult):
+def parseVariants(study_result):
     variants = []
 
     current_patient = ""
+    origin = "DNA"
 
-    for result in studyResult:
+    for result in study_result:
 
         gene = result['gene']
         alteration_type = result['aberration']['aberration_type2']
-        origin = "DNA"
-        studyPatientTissue = result['variants'][0]['studyPatientTissue']
+        dna_allele_freq = ""
+        study_patient_tissue = result['variants'][0]['studyPatientTissue']
+
+        if 'SEURAT_AR_TUMOR' in result['variants'][0]:
+            dna_allele_freq = result['variants'][0]['SEURAT_AR_TUMOR']
+        elif 'AR2' in result['variants'][0]:
+            dna_allele_freq = result['variants'][0]['AR2']
 
         effect = ""
         if not current_patient:
-            print("changing current patient to : " + studyPatientTissue)
-            current_patient = studyPatientTissue
+            print("changing current patient to : " + study_patient_tissue)
+            current_patient = study_patient_tissue
 
         if 'AminoAcidChange' in result['snpeff']:
             effect = result['snpeff']['AminoAcidChange']
@@ -107,14 +113,14 @@ def parseVariants(studyResult):
         elif alteration_type.startswith("Splic"):
             effect = alteration_type
 
-        if studyPatientTissue != current_patient:
+        # Switching patients when we get to new patient
+        if study_patient_tissue != current_patient:
             # id = getPatientId(studyPatientTissue)
             print_biomarker(current_patient, variants)
             variants = []
-            current_patient = studyPatientTissue
+            current_patient = study_patient_tissue
 
-
-        variant = {"gene": gene, "alteration_type": alteration_type, "origin": origin, "effect": effect}
+        variant = {"gene": gene, "alteration_type": alteration_type, "origin": origin, "effect": effect, "dna_allele_frequency": dna_allele_freq}
         variants.append(variant)
 
 
