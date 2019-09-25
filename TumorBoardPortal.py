@@ -6,7 +6,7 @@ import pprint
 client = MongoClient("labdb01.tgen.org", 25755)
 annotateDb = client['AnnotateBy']
 geneCollection = annotateDb['gene']
-
+out_dir = "/ngd-data/prodCentralDB/C024/"
 statsDb = client['statsTemp']
 componentsCollection = statsDb['components']
 
@@ -54,7 +54,7 @@ def print_biomarker(patient, project_run, variants):
     }
     biomarkers_json = json.dumps(biomarkers)
     patient_id = get_patient_id(patient)
-    file = open("patients/" + patient_id + ".json", "w")
+    file = open(out_dir + "/patients/" + patient_id + ".json", "w")
     length = len(variants)
     print("")
     print(str(length) + " " + patient_id)

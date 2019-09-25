@@ -1,1 +1,0 @@
-{"api_version": "2.0.1", "source": "TGen", "drug_rules_version": "Cosmic v82", "biomarkers": [{"gene": "RAD51B", "alteration_type": "Missense", "origin": "DNA", "effect": "R151I"}, {"gene": "ERBB4", "alteration_type": "Missense", "origin": "DNA", "effect": "K1234N"}]}

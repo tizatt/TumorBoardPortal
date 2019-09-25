@@ -1,1 +1,0 @@
-{"api_version": "2.0.1", "source": "TGen", "drug_rules_version": "Cosmic v82", "biomarkers": [{"gene": "MYCN", "alteration_type": "Focal Copy Number Gain", "origin": "DNA", "effect": "Amplification", "dna_allele_frequency": ""}, {"gene": "CDKN2A", "alteration_type": "Focal Copy Number Loss", "origin": "DNA", "effect": "Deletion", "dna_allele_frequency": ""}]}

@@ -1,1 +1,0 @@
-{"api_version": "2.0.1", "source": "TGen", "drug_rules_version": "Cosmic v82", "biomarkers": [{"gene": "NCOA4", "alteration_type": "Missense", "origin": "DNA", "effect": "E424D"}, {"gene": "SETBP1", "alteration_type": "Missense", "origin": "DNA", "effect": "H192Q"}, {"gene": "PIK3R1", "alteration_type": "Missense", "origin": "DNA", "effect": "V181I"}]}
