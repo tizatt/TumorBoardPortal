@@ -1,0 +1,1 @@
+{"api_version": "2.0.1", "source": "TGen", "drug_rules_version": "Cosmic v82", "biomarkers": [{"gene": "NOTCH1", "alteration_type": "Missense", "origin": "DNA", "effect": "H371Y"}]}

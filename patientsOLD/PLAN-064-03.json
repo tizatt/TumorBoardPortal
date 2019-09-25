@@ -1,0 +1,1 @@
+{"api_version": "2.0.1", "source": "TGen", "drug_rules_version": "Cosmic v82", "biomarkers": [{"gene": "KRAS", "alteration_type": "Missense", "origin": "DNA", "effect": "Q61L"}, {"gene": "SMARCB1", "alteration_type": "Splice-site Loss", "origin": "DNA", "effect": "Splice-site Loss"}]}

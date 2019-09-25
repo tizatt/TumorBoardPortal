@@ -1,0 +1,1 @@
+{"api_version": "2.0.1", "source": "TGen", "drug_rules_version": "Cosmic v82", "biomarkers": [{"gene": "ATR", "alteration_type": "Missense", "origin": "DNA", "effect": "M283I", "dna_allele_frequency": ""}, {"gene": "ATRX", "alteration_type": "Loss Of Function", "origin": "DNA", "effect": "QQ292*", "dna_allele_frequency": ""}]}
