@@ -7,7 +7,7 @@ client = MongoClient("labdb01.tgen.org", 25755)
 annotateDb = client['AnnotateBy']
 geneCollection = annotateDb['gene']
 out_dir = "/ngd-data/prodCentralDB/C024/"
-statsDb = client['statsTemp']
+statsDb = client['stats']
 componentsCollection = statsDb['components']
 
 db = client['markers']
@@ -41,27 +41,44 @@ def get_cancer_census():
 
 
 def get_clinical_info( project_run ):
-    
+    kb_result = componentsCollection.find({"projectRun": project_run})
+    for result in kb_result:
+        if 'kb' in result:
+            diagnosis = result['kb']['visit']['diagnosis']
+            specimen_site = ""
+            print (result['kb']['visit']['report_Submitting_Institution'])
+            if 'samples' in result['kb']:
+                specimen_site = result['kb']['samples']['sampleSource']
+            tumor_collection_date = result['kb']['visit']['CollectionDate']
+            order = {
+                "primary_diagnosis" : diagnosis,
+            }
+            print(order)
+            return order
 
-def print_biomarker(patient, project_run, variants):
+def print_biomarker(patient, project_run, assay, variants):
     
-    clinical_info = get_clinical_info( project_run )
+    order = get_clinical_info( project_run )
     biomarkers = {
         "api_version": "2.0.1",
         "source": "TGen",
-        "drug_rules_version": "Cosmic v82",
+        "drug_rules_version": assay,
+        "order" : order,
         "biomarkers": variants
     }
+
     biomarkers_json = json.dumps(biomarkers)
     patient_id = get_patient_id(patient)
     file = open(out_dir + "/patients/" + patient_id + ".json", "w")
     length = len(variants)
+
     print("")
     print(str(length) + " " + patient_id)
     print("")
     for row in variants:
         print(row['gene'] + " " + row['effect'] + " " + row['alteration_type'])
     file.write(biomarkers_json)
+
     file.close()
 
 
@@ -86,7 +103,6 @@ def getVariants():
 
 def parseVariants(study_result):
     variants = []
-    project_run = ""
     current_patient = ""
     origin = "DNA"
 
@@ -95,8 +111,14 @@ def parseVariants(study_result):
         gene = result['gene']
         alteration_type = result['aberration']['aberration_type2']
         dna_allele_freq = ""
-        project_run = result['variants'[0]['projectRun']
-	study_patient_tissue = result['variants'][0]['studyPatientTissue']
+        project_run = result['variants'][0]['projectRun']
+        assay = result['variants'][0]['assay']
+        study_patient_tissue = result['variants'][0]['studyPatientTissue']
+
+        if assay.endswith("STX"):
+            assay = "Strexome"
+        elif "ID" in assay:
+            assay = "GEMExTra"
 
         if 'SEURAT_AR_TUMOR' in result['variants'][0]:
             dna_allele_freq = result['variants'][0]['SEURAT_AR_TUMOR']
@@ -125,14 +147,14 @@ def parseVariants(study_result):
         # Switching patients when we get to new patient
         if study_patient_tissue != current_patient:
             # id = getPatientId(studyPatientTissue)
-            print_biomarker(current_patient, variants)
+            print_biomarker(current_patient, project_run, assay, variants)
             variants = []
             current_patient = study_patient_tissue
     
         variant = {"gene": gene, "alteration_type": alteration_type, "origin": origin, "effect": effect, "dna_allele_frequency": dna_allele_freq}
         variants.append(variant)
 
-    print_biomarker("C024_0008_T1", project_run, variants)
+    #print_biomarker("C024_0008_T1", project_run, variants)
 
 queryResult = getVariants()
 parseVariants(queryResult)
