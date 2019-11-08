@@ -2,9 +2,26 @@ from pymongo import MongoClient
 import pymongo
 import json
 import pprint
+import os.path
 
 # Database setup
-client = MongoClient("labdb01.tgen.org", 25755)
+host="labdb01.tgen.org"
+port=25755
+
+# files
+plan_conversion_file = "PLAN_C024.txt"
+other_vcf = "other.vcf"
+out_dir = "/Volumes/ngd-data/prodCentralDB/C024/patients/"
+
+# constants
+study = "C024"
+origin = "DNA"
+api_version = "2.0.1"
+
+# global variable
+convert_plan_c024 = []
+
+client = MongoClient(host, port)
 annotateDb = client['AnnotateBy']
 geneCollection = annotateDb['gene']
 db = client['markers']
@@ -12,30 +29,81 @@ tumorCollection = db['tumor']
 statsDb = client['stats']
 componentsCollection = statsDb['components']
 
-# files
-plan_conversion_file = "PLAN_C024.txt"
-out_dir = "/ngd-data/prodCentralDB/C024/patients/"
-convert_plan_c024 = []
-# constants
-study = "C024"
-origin = "DNA"
-api_version = "2.0.1"
 
-
-# convert C024 ids to PLAN ids
+# convert ids to PLAN ids
 def load_plan_conversion_file():
     global convert_plan_c024
     with open(plan_conversion_file) as f:
         rows = (line.split(' ') for line in f)
         convert_plan_c024 = {row[0]: row[1:] for row in rows}
 
-    # convert_plan_c024 = dict(x.rstrip().split(None, 1) for x in f)
 
-    # patient = study_patient_tissue[:-3]
-    # if patient in convert_plan_c024:
-    #    return convert_plan_c024[patient][0]
-    # else:
-    #    return study_patient_tissue
+def truncate(n, decimals=0):
+    multiplier = 10 ** decimals
+    return int(n * multiplier) / multiplier
+
+    # Parse the "other.vcf" file that Ashion provides.  This has the TMB / MSI values
+
+
+def parse_other_vcf():
+    tmb_msi_record = []
+    tmb_category = ""
+    tmb_value = ""
+    msi_category = ""
+    with open(other_vcf) as fp:
+        for line in fp:
+            if line.startswith("##"):
+                a = 5
+            else:
+                vcf_list = line.split("\t")
+                info_group = vcf_list[7]
+                if info_group.startswith("TMB"):
+                    tmb_line = info_group.split(";")
+                    tmb_value_float = float(tmb_line[0].split("=")[1])
+                    tmb_value = truncate(tmb_value_float, 2)
+                    tmb_category = tmb_line[1].split("=")[1]
+                if info_group.startswith("MSI"):
+                    msi_category = info_group.split("=")[1]
+
+    tmb_record = {
+        "gene": "TMB",
+        "alteration_type": "TMB " + tmb_category.strip(),
+        "effect": str(tmb_value) + " mut/Mb"
+    }
+
+    msi_record = {
+        "gene": "MSI",
+        "alteration_type": "MSI: " + msi_category.strip()
+    }
+    tmb_msi_record.append(tmb_record)
+    tmb_msi_record.append(msi_record)
+
+    fp.close()
+
+    return tmb_msi_record
+
+def get_specimen_information(study_id):
+    # Query the clinical db for information about the studyID
+    specimen_type = ""
+    kb_result = componentsCollection.find({"projectRun": {'$regex': study_id }})
+    for result in kb_result:
+        if 'kb' in result:
+            diagnosis = result['kb']['visit']['diagnosis']
+            specimen_site = ""
+            if 'samples' in result['kb']:
+                specimen_site = result['kb']['samples']['sampleSource']
+                specimen_type = result['kb']['samples']['sampleType']
+            tumor_collection_date = result['kb']['visit']['CollectionDate']
+            order = {
+                "primary_diagnosis": diagnosis,
+                "specimen_site" : specimen_site,
+                "specimen_type" : specimen_type,
+                "tumor_collection_date" : tumor_collection_date
+            }
+            return order
+
+
+
 
 
 # Get a list of genes in the Cosmic cancer census
@@ -48,28 +116,12 @@ def get_cancer_census():
     return cc_genes
 
 
-# Query the clinical db for information about the tissue
-def get_clinical_info(project_run):
-    kb_result = componentsCollection.find({"projectRun": project_run})
-    for result in kb_result:
-        if 'kb' in result:
-            diagnosis = result['kb']['visit']['diagnosis']
-            specimen_site = ""
-            if 'samples' in result['kb']:
-                specimen_site = result['kb']['samples']['sampleSource']
-            tumor_collection_date = result['kb']['visit']['CollectionDate']
-            order = {
-                "primary_diagnosis": diagnosis,
-            }
-            return order
-
 
 # Print out the json records to separate patient json files
 def print_biomarker(study_patient_tissue, assay, variants):
-    # order = get_clinical_info( project_run )
+
     global convert_plan_c024
     patient = study_patient_tissue[:-3]
-    diagnosis = ""
     patient_id = study_patient_tissue
     print ("PATIENT ID= " + patient_id)
     if patient in convert_plan_c024:
@@ -78,11 +130,9 @@ def print_biomarker(study_patient_tissue, assay, variants):
             patient_id = patient_list[0]
         if len(patient_list) > 1:
             diagnosis = patient_list[1].rstrip()
+    print(patient_id)
+    order = get_specimen_information( patient )
 
-    print ("PATIENT ID= " + patient_id)
-    order = {
-        "primary_diagnosis": diagnosis
-    }
     biomarkers = {
         "api_version": api_version,
         "source": "TGen",
@@ -93,11 +143,13 @@ def print_biomarker(study_patient_tissue, assay, variants):
 
     biomarkers_json = json.dumps(biomarkers)
     # patient_id = get_patient_id(patient)
-
-    file = open(out_dir + patient_id + ".json", "w")
-    print(file)
-    file.write(biomarkers_json)
-    file.close()
+    filename = out_dir + patient_id + ".json"
+    if not os.path.exists( filename ):
+        file = open(filename,'w')
+        print(file)
+        print(json.dumps(biomarkers_json,indent=4))
+        file.write(biomarkers_json)
+        file.close()
 
 
 # Query the mongo db for "Pass" variants within certain filetypes
