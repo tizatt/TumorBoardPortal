@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5d3335e-8a02-443d-8a7a-7fdd14428398" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/TumorBoardPortal.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TumorBoardPortal.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="b5d3335e-8a02-443d-8a7a-7fdd14428398" name="Default Changelist" comment="Moved functions to the portal_convert.py script that are shared by the beatcc and TumorBoardPortal scripts.">
+      <change afterPath="$PROJECT_DIR$/portal_convert.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TumorBoardPortal.py" beforeDir="false" afterPath="$PROJECT_DIR$/TumorBoardPortal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatcc_rna_to_portal.py" beforeDir="false" afterPath="$PROJECT_DIR$/beatcc_rna_to_portal.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,38 +15,46 @@
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="936431501">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="4" />
+          <entry key="py" value="1847" />
+          <entry key="txt" value="113" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="4" />
+          <entry key="PLAIN_TEXT" value="113" />
+          <entry key="Python" value="1847" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="1" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/beatcc_rna_to_portal.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="69" column="34" lean-forward="true" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="34" />
+            <state relative-caret-position="107">
+              <caret line="112" column="23" selection-start-line="112" selection-start-column="23" selection-end-line="112" selection-end-column="23" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <marker date="1573232146626" expanded="true" signature="1686:2380" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PLAN_093-43_BCC_RNA.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -54,11 +62,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TumorBoardPortal.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret line="140" column="30" lean-forward="true" selection-start-line="140" selection-start-column="30" selection-end-line="140" selection-end-column="30" />
+            <state relative-caret-position="218">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
+                <marker date="1576188216511" expanded="true" signature="666:825" ph="..." />
+                <marker date="1576188216511" expanded="true" signature="3656:4088" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/portal_convert.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="218">
+              <caret line="38" column="50" selection-start-line="38" selection-start-column="50" selection-end-line="38" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -74,11 +93,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find />
-      <find>\t</find>
-      <find>get_patient</find>
-      <find>\t\t</find>
-      <find>PLAN-002</find>
       <find>Freebayes.filt.snpEff.vcf</find>
       <find>assay</find>
       <find>components</find>
@@ -87,11 +101,28 @@
       <find>get_clinical_info</find>
       <find>tmb_category</find>
       <find>convert_plan_c024</find>
-      <find>get_variants</find>
-      <find>parse_other</find>
-      <find>variants</find>
       <find>msi</find>
+      <find>variants</find>
+      <find>tmb_level</find>
       <find>print</find>
+      <find>BeatCC</find>
+      <find>while</find>
+      <find>Drug</find>
+      <find>or</find>
+      <find>csv</find>
+      <find>get_variants</find>
+      <find>ccGenes</find>
+      <find>study_patient</find>
+      <find>print_biomarker</find>
+      <find>print_to_csv</find>
+      <find>get_cancer_census</find>
+      <find>tmb_msi</find>
+      <find>import</find>
+      <find>parse_other</find>
+      <find>portal_convert</find>
+      <find>truncate</find>
+      <find>drugs</find>
+      <find>study</find>
     </findStrings>
     <replaceStrings>
       <replace>\t</replace>
@@ -105,16 +136,17 @@
       <list>
         <option value="$PROJECT_DIR$/PLAN_C024.txt" />
         <option value="$PROJECT_DIR$/PLAN_093-43_BCC_RNA.json" />
-        <option value="$PROJECT_DIR$/TumorBoardPortal.py" />
+        <option value="$PROJECT_DIR$/portal_convert.py" />
         <option value="$PROJECT_DIR$/beatcc_rna_to_portal.py" />
+        <option value="$PROJECT_DIR$/TumorBoardPortal.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="110" />
-    <option name="y" value="171" />
-    <option name="width" value="1487" />
-    <option name="height" value="843" />
+    <option name="x" value="985" />
+    <option name="y" value="252" />
+    <option name="width" value="1254" />
+    <option name="height" value="1183" />
   </component>
   <component name="ProjectId" id="1PqJdNgnhtU0zK7rlGs5hbEx941" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -123,7 +155,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -135,6 +166,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -237,16 +269,24 @@
       <option name="project" value="LOCAL" />
       <updated>1570729951800</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added support for the conversion file">
+      <created>1573233593379</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1573233593379</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1578" y="60" width="1935" height="1459" extended-state="0" />
+    <frame x="985" y="252" width="1254" height="1183" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1516112" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18811882" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Messages" visible="true" weight="0.3299725" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -255,7 +295,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.49231896" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.15765353" />
       <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -284,6 +324,9 @@
       </map>
     </option>
   </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
     <MESSAGE value="Added sorting by studyPatient" />
@@ -292,7 +335,8 @@
     <MESSAGE value="Modified the query to grab different filenames" />
     <MESSAGE value="Added the conversion file for C024" />
     <MESSAGE value="Added support for the conversion file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added support for the conversion file" />
+    <MESSAGE value="Moved functions to the portal_convert.py script that are shared by the beatcc and TumorBoardPortal scripts." />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved functions to the portal_convert.py script that are shared by the beatcc and TumorBoardPortal scripts." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/PLAN_C024.txt">
@@ -302,30 +346,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/PLAN_093-43_BCC_RNA.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1035">
+          <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/beatcc_rna_to_portal.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="69" column="34" lean-forward="true" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="34" />
+        <state relative-caret-position="107">
+          <caret line="112" column="23" selection-start-line="112" selection-start-column="23" selection-end-line="112" selection-end-column="23" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1573232146626" expanded="true" signature="1686:2380" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PLAN_093-43_BCC_RNA.json">
+    <entry file="file://$PROJECT_DIR$/portal_convert.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+        <state relative-caret-position="218">
+          <caret line="38" column="50" selection-start-line="38" selection-start-column="50" selection-end-line="38" selection-end-column="50" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TumorBoardPortal.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="140" column="30" lean-forward="true" selection-start-line="140" selection-start-column="30" selection-end-line="140" selection-end-column="30" />
+        <state relative-caret-position="218">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+            <marker date="1576188216511" expanded="true" signature="666:825" ph="..." />
+            <marker date="1576188216511" expanded="true" signature="3656:4088" ph="..." />
           </folding>
         </state>
       </provider>

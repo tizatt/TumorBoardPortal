@@ -1,6 +1,5 @@
 import xlrd
 from pymongo import MongoClient
-import json
 
 host = "labdb01.tgen.org"
 port = 25755
@@ -16,13 +15,14 @@ client = MongoClient(host, port)
 statsDb = client['stats']
 componentsCollection = statsDb['components']
 
-bcc_file = '/Users/tizatt/Desktop/PLAN-094-09.xlsx'
-other_vcf = '/Volumes/ngd-data/prodCentralDB/TumorBoardPortal/other.vcf'
+bcc_file = '/NMTRC/TumorBoardPortal/C024/BCC_RNA/PLAN-099-21.xlsx'
+other_vcf = '/ngd-data/reports/C024/0076/015898/T1/K1ID2/other.vcf'
 
 
 def read_xls_file():
     wb = xlrd.open_workbook(bcc_file)
     bcc_data = wb.sheet_by_name('nmtrc_2')
+    num_cols = bcc_data.ncols  # Number of columns
 
     return bcc_data
 
@@ -35,6 +35,7 @@ def get_specimen_information(studyId):
         if 'kb' in result:
             diagnosis = result['kb']['visit']['diagnosis']
             specimen_site = ""
+            specimen_type = ""
             if 'samples' in result['kb']:
                 specimen_site = result['kb']['samples']['sampleSource']
                 specimen_type = result['kb']['samples']['sampleType']
@@ -69,7 +70,7 @@ def parse_other_vcf():
                 if info_group.startswith("TMB"):
                     tmb_line = info_group.split(";")
                     tmb_value_float = float(tmb_line[0].split("=")[1])
-                    tmb_value = truncate(tmb_value_float, 2)
+                    tmb_value = round(tmb_value_float, 2)
                     tmb_category = tmb_line[1].split("=")[1]
                 if info_group.startswith("MSI"):
                     msi_category = info_group.split("=")[1]
@@ -109,7 +110,7 @@ def print_to_csv(json):
 
     counter = 0
     for record in json["biomarkers"]:
-
+        csv_record = ""
         if record["gene"] == "MSI" or record["gene"] == "TMB":
             a =1
         else:
@@ -120,16 +121,22 @@ def print_to_csv(json):
             if record["gene"] == "MSI":
                 msi = record["alteration_type"]
             else:
-                tmb_level = record["alteration_type"]
-                tmb_quantity = record["effect"]
+                tmb_level = record["effect"]
+                tmb_quantity = record["alteration_type"]
         elif counter == 0:
             csv_first_row = csv_first_row + "," + csv_record
             for drug in record["drugs"]:
                 first_row_drugs = first_row_drugs + "," + drug["drug_name"]
+
         else:
             csv_record = csv_record + ",,,,"
-            for drug in record["drugs"]:
-                csv_record = "BeatCC,,,,,,,"+ csv_record + drug["drug_name"]
+            csv_record = "BeatCC,,,,,,,"+ csv_record
+
+            for i in range(len(record["drugs"])):
+                if i > 0:
+                    csv_record=csv_record + ";"
+                csv_record = csv_record + record["drugs"][i]["drug_name"]
+
             csv_output = csv_output + csv_record + "\n"
 
         counter += 1
@@ -143,27 +150,27 @@ def parse_beatcc_rna(bcc_data):
     header = bcc_data.col(0)
     row_counter = 0
     aberration_records = []
-    drug_name = "%"
+    drug_name = "%%%"
     study_id = ""
     report_version = ""
 
     for row in header:
         row_val = str(row)
+
         if "Study ID" in row_val:
             study_id = bcc_data.cell_value(row_counter, StudyID)
         if "Report Version" in row_val:
             report_version = bcc_data.cell_value(row_counter, StudyID)[1:]
-        if "Drug -" in row_val:
-            drug_name = bcc_data.cell_value(row_counter, Drug)
+
         if drug_name in row_val:
             gene = bcc_data.cell_value(row_counter, Gene)
             drug_info = bcc_data.cell_value(row_counter, DrugInfo)
 
             expression_type = bcc_data.cell_value(row_counter, ZScore)
 
-            zscore_val = truncate(bcc_data.cell_value(row_counter + 1, ZScore), 2)
+            zscore_val = round(bcc_data.cell_value(row_counter + 1, ZScore), 2)
 
-            tumor_percent_val = truncate(bcc_data.cell_value(row_counter + 1, TumorPercent), 2)
+            tumor_percent_val = round(bcc_data.cell_value(row_counter + 1, TumorPercent), 2)
             drugs = [{"drug_name": drug_name.lower(), "drug_status": "Predicted Beneficial"}]
 
             aberration_record = dict(
@@ -173,8 +180,17 @@ def parse_beatcc_rna(bcc_data):
                 effect=expression_type + ", NRZ=" + str(zscore_val) + ", CRC=" + str(tumor_percent_val),
                 drugs=drugs
             )
+            duplicate_gene = False
+            for record in range(len(aberration_records)):
+                if gene == aberration_records[record]["gene"]:
+                    aberration_records[record]["drugs"].append(drugs[0])
+                    duplicate_gene = True
 
-            aberration_records.append(aberration_record)
+            if not duplicate_gene:
+                aberration_records.append(aberration_record)
+
+        if "Drug -" in row_val:
+            drug_name = bcc_data.cell_value(row_counter, Drug)
 
         row_counter += 1
 
