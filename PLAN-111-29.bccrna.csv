@@ -1,0 +1,7 @@
+source,api version,drug rules version,specimen collection date,specimen type,specimen site,disease type,gene,origin,alteration type,effect,tmb level,tmb quantity,msi,recommended medications
+BeatCC,1,0.8,,,,,HDAC2,RNA,overexpression,"over, NRZ=7.32, CRC=0.51",0.41 mut/Mb,low,stable,vorinostat
+BeatCC,,,,,,,HDAC6,RNA,overexpression,"over, NRZ=1.73, CRC=0.9",,,,vorinostat
+BeatCC,,,,,,,RAD23B,RNA,overexpression,"over, NRZ=0.55, CRC=0.79",,,,vorinostat
+BeatCC,,,,,,,RET,RNA,overexpression,"over, NRZ=3.03, CRC=0.87",,,,sorafenib
+BeatCC,,,,,,,ALK,RNA,overexpression,"over, NRZ=3.01, CRC=0.44",,,,ceritinib
+BeatCC,,,,,,,CRKL,RNA,overexpression,"over, NRZ=0.47, CRC=0.87",,,,dasatinib

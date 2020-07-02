@@ -1,0 +1,70 @@
+{
+    "api_version": "1",
+    "drug_rules_version": "0.8",
+    "source": "BeatCC",
+    "order": {
+        "primary_diagnosis": "Neuroblastoma",
+        "specimen_site": "Abdominal Mass",
+        "specimen_type": "Frozen Tissue",
+        "tumor_collection_date": "10/7/2019"
+    },
+    "biomarkers": [
+        {
+            "gene": "HDAC2",
+            "alteration_type": "overexpression",
+            "origin": "RNA",
+            "effect": "over, NRZ=9.01, CRC=0.82",
+            "drugs": [
+                {
+                    "drug_name": "VORINOSTAT",
+                    "drug_status": "Predicted Beneficial"
+                }
+            ]
+        },
+        {
+            "gene": "HDAC9",
+            "alteration_type": "overexpression",
+            "origin": "RNA",
+            "effect": "over, NRZ=2.76, CRC=0.79",
+            "drugs": [
+                {
+                    "drug_name": "VORINOSTAT",
+                    "drug_status": "Predicted Beneficial"
+                }
+            ]
+        },
+        {
+            "gene": "CTBP2",
+            "alteration_type": "overexpression",
+            "origin": "RNA",
+            "effect": "over, NRZ=0.74, CRC=0.92",
+            "drugs": [
+                {
+                    "drug_name": "VORINOSTAT",
+                    "drug_status": "Predicted Beneficial"
+                }
+            ]
+        },
+        {
+            "gene": "RET",
+            "alteration_type": "overexpression",
+            "origin": "RNA",
+            "effect": "over, NRZ=2.27, CRC=0.69",
+            "drugs": [
+                {
+                    "drug_name": "SORAFENIB",
+                    "drug_status": "Predicted Beneficial"
+                }
+            ]
+        },
+        {
+            "gene": "TMB",
+            "alteration_type": "TMB low",
+            "effect": "0.07 mut/Mb"
+        },
+        {
+            "gene": "MSI",
+            "alteration_type": "MSI: stable"
+        }
+    ]
+}

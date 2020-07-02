@@ -1,0 +1,7 @@
+##fileformat=VCFv4.1
+##INFO=<ID=TMBVALUE,Number=1,Type=Float,Description="tumor mutation burden ratio">
+##INFO=<ID=TMBCATEGORY,Number=1,Type=String,Description="categorization of the tmb value">
+##INFO=<ID=MSICATEGORY,Number=1,Type=String,Description="categorization of msi">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+.	0	.	.	.	.	PASS	TMBVALUE=0.0767529215999607;TMBCATEGORY=low
+.	0	.	.	.	.	PASS	MSICATEGORY=stable

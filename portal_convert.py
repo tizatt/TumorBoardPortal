@@ -43,7 +43,7 @@ def print_to_csv(json):
 
         else:
             csv_record = csv_record + ",,,,"
-            csv_record = "BeatCC,,,,,,,"+ csv_record
+            csv_record = "TGen,,,,,,,"+ csv_record
 
             if "drugs" in record:
                 for i in range(len(record["drugs"])):

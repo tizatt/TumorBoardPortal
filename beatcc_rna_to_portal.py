@@ -15,8 +15,8 @@ client = MongoClient(host, port)
 statsDb = client['stats']
 componentsCollection = statsDb['components']
 
-bcc_file = '/NMTRC/TumorBoardPortal/C024/BCC_RNA/PLAN-099-21.xlsx'
-other_vcf = '/ngd-data/reports/C024/0076/015898/T1/K1ID2/other.vcf'
+bcc_file = '/Users/tizatt/Downloads/PLAN-115-08.xlsx'
+other_vcf = '/Volumes/labs/ngd-data/reports/C024/0083/023404/T1/K1ID2/other.vcf'
 
 
 def read_xls_file():
@@ -31,6 +31,11 @@ def get_specimen_information(studyId):
     # Query the clinical db for information about the studyID
 
     kb_result = componentsCollection.find({"kb.patients.studyPatientID": studyId})
+    
+    diagnosis = ""
+    specimen_site = ""
+    specimen_type = ""
+    tumor_collection_date = ""
     for result in kb_result:
         if 'kb' in result:
             diagnosis = result['kb']['visit']['diagnosis']
@@ -40,13 +45,15 @@ def get_specimen_information(studyId):
                 specimen_site = result['kb']['samples']['sampleSource']
                 specimen_type = result['kb']['samples']['sampleType']
             tumor_collection_date = result['kb']['visit']['CollectionDate']
-            order = {
-                "primary_diagnosis": diagnosis,
-                "specimen_site": specimen_site,
-                "specimen_type": specimen_type,
-                "tumor_collection_date": tumor_collection_date
-            }
-            return order
+
+    order = {
+         "primary_diagnosis": diagnosis,
+         "specimen_site": specimen_site,
+         "specimen_type": specimen_type,
+         "tumor_collection_date": tumor_collection_date
+    } 
+
+    return order
 
 
 def truncate(n, decimals=0):
@@ -167,7 +174,6 @@ def parse_beatcc_rna(bcc_data):
             drug_info = bcc_data.cell_value(row_counter, DrugInfo)
 
             expression_type = bcc_data.cell_value(row_counter, ZScore)
-
             zscore_val = round(bcc_data.cell_value(row_counter + 1, ZScore), 2)
 
             tumor_percent_val = round(bcc_data.cell_value(row_counter + 1, TumorPercent), 2)

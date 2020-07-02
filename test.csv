@@ -1,0 +1,6 @@
+source,api version,drug rules version,specimen,collection date,specimen type,specimen site,disease type,gene,origin,alteration type,effect,tmb level,tmb quantity,msi,recommended medications
+BeatCC,1,0.8,10/7/2019,Frozen Tissue,Abdominal Mass,Neuroblastoma,HDAC2,RNA,overexpression,"over, NRZ=9.01, CRC=0.82"TMB low,0.07 mut/Mb,MSI: stable,VORINOSTAT
+BeatCC,,,,,,,HDAC9,RNA,overexpression,"over, NRZ=2.76, CRC=0.79",,,,VORINOSTAT
+BeatCC,,,,,,,CTBP2,RNA,overexpression,"over, NRZ=0.74, CRC=0.92",,,,VORINOSTAT
+BeatCC,,,,,,,RET,RNA,overexpression,"over, NRZ=2.27, CRC=0.69",,,,SORAFENIB
+

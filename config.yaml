@@ -1,0 +1,28 @@
+import os.path
+####
+# Constants
+####
+
+# Database setup
+
+host: labdb01.tgen.org
+port: 25755
+annotate_db: AnnotateBy
+gene_collection: gene
+markers_db: markers
+tumor_collection: tumor
+stats_db: stats
+components_collection: components
+
+other_vcf_filename: other.vcf
+other_vcf_search_dir: /labs/ngd-data/reports/C024/
+
+beatcc_dna_out_dir: /labs/NMTRC/TumorBoardPortal/C024/SGR/
+beatcc_dna_api_version: 2.0.1
+beatcc_dna_origin: DNA
+beatcc_dna_source: TGen
+beatcc_dna_outfile_extension: _SGR.csv
+
+beatcc_rna_worksheet: nmtrc_2
+beatcc_rna_api_version: 1
+beatcc_rna_source: BeatCC

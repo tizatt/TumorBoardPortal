@@ -8,12 +8,12 @@ import os.path
 host = "labdb01.tgen.org"
 port = 25755
 
-study_dir = "/ngd-data/reports/C024/"
+study_dir = "/labs/ngd-data/reports/C024/"
 
 # files
 # plan_conversion_file = "PLAN_C024.txt"
 other_vcf = "other.vcf"
-out_dir = "/NMTRC/TumorBoardPortal/C024/SGR/"
+out_dir = "/labs/NMTRC/TumorBoardPortal/C024/SGR/"
 
 # constants
 
@@ -32,18 +32,22 @@ statsDb = client['stats']
 componentsCollection = statsDb['components']
 
 
-
 def find_patients(name, path):
     result = []
     for root, dirs, files in os.walk(path):
         if name in files:
             result.append(os.path.join(root, name))
+
     return result
 
 
 def get_specimen_information(study_id):
     # Query the clinical db for information about the studyID
     specimen_type = ""
+    diagnosis = ""
+    specimen_site = ""
+    tumor_collection_date = ""
+
     kb_result = componentsCollection.find({"projectRun": {'$regex': study_id}})
     for result in kb_result:
         if 'kb' in result:
@@ -53,17 +57,18 @@ def get_specimen_information(study_id):
                 specimen_site = result['kb']['samples']['sampleSource']
                 specimen_type = result['kb']['samples']['sampleType']
             tumor_collection_date = result['kb']['visit']['CollectionDate']
-            order = {
-                "primary_diagnosis": diagnosis,
-                "specimen_site": specimen_site,
-                "specimen_type": specimen_type,
-                "tumor_collection_date": tumor_collection_date
-            }
-            return order
+
+    order = {
+        "primary_diagnosis": diagnosis,
+        "specimen_site": specimen_site,
+        "specimen_type": specimen_type,
+        "tumor_collection_date": tumor_collection_date
+    }
+
+    return order
 
 
 def get_patient_id(study_id):
-
     kb_result = componentsCollection.find({"projectRun": {'$regex': study_id}})
     for result in kb_result:
         if 'kb' in result:
@@ -106,17 +111,12 @@ def print_biomarker(study_patient_tissue, assay, variants):
     if not os.path.exists(filename):
         csv_output = portal_convert.print_to_csv(biomarkers)
         file = open(filename, 'w')
-        csv_file = open(filename.replace(".json","_SGR.csv"), 'w')
+        csv_file = open(filename.replace(".json", "_SGR.csv"), 'w')
         csv_file.write(csv_output)
         file.write(biomarkers_json)
         file.close()
         csv_file.close()
 
-
-# Need to change this to run on single patients so that if patient variant count is zero, it will still generate a report
-#  Start by finding the "other.vcf" files and from there if that studyPatient is new then generate a report. This would give
-#  the studypatient info needed, which is currently missing.
-# Query the mongo db for "Pass" variants within certain filetypes
 
 def get_patients():
     study_patient_tissue = []
@@ -124,15 +124,16 @@ def get_patients():
     results = find_patients("other.vcf", study_dir)
     for result in results:
         result_arr = result.split("/")
-        patient = str(result_arr[4])
-        tissue = str(result_arr[6])
-        study = str(result_arr[3])
+        patient = str(result_arr[5])
+        tissue = str(result_arr[7])
+        study = str(result_arr[4])
         study_patient_tissue.append(study + "_" + patient + "_" + tissue)
         other_vcfs.append(result)
 
     return other_vcfs, study_patient_tissue
 
 
+# Query the mongo db for "Pass" variants within certain filetypes
 def get_variants(study_patient_tissue, cc_genes):
     print(study_patient_tissue)
 
@@ -146,6 +147,7 @@ def get_variants(study_patient_tissue, cc_genes):
                  {'variants.filename': {'$regex': 'rna.final.seurat.vcf'}},
                  {'variants.filename': {'$regex': 'cna.seg.vcf'}},
                  {'variants.filename': {'$regex': 'trn.vcf'}},
+                 {'variants.filename': {'$regex': 'qualified.vcf'}},
                  {'variants.filename': {'$regex': 'trn2.vcf'}},
                  {'variants.filename': {'$regex': 'copy_number.vcf'}}
                  ]
@@ -200,7 +202,7 @@ def parse_variants():
                        "dna_allele_frequency": dna_allele_freq}
             variants.append(variant)
 
-        tmb_msi_records = portal_convert.parse_other_vcf( other_vcf)
+        tmb_msi_records = portal_convert.parse_other_vcf(other_vcf)
         for tm_record in tmb_msi_records:
             variants.append(tm_record)
         print_biomarker(study_patient_tissue, assay, variants)
